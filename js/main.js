@@ -1,3 +1,6 @@
 import {generateMockData} from './mocks.js';
+import {renderCard} from './cards.js';
 
-generateMockData();
+const cardArray = generateMockData();
+
+renderCard(cardArray[0]);

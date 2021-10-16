@@ -19,9 +19,9 @@ const generateMockData = function () {
         guests: getRandomIntInclusive(1, 10),
         checkin: getRandomItem(CHECKIN),
         checkout: getRandomItem(CHECKOUT),
-        features: shuffleArray(FEATURES).slice(0, getRandomIntInclusive(0, FEATURES.length-1)),
+        features: shuffleArray(FEATURES).slice(0, getRandomIntInclusive(1, FEATURES.length)),
         description: getRandomItem(DESCRIPTIONS),
-        photos: getRandomItem(PHOTOS),
+        photos: shuffleArray(PHOTOS).slice(0, getRandomIntInclusive(1, PHOTOS.length)),
       },
       location: {
         lat: lat,
