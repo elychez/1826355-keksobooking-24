@@ -10,6 +10,8 @@ const validation = function () {
   const titleInput = document.querySelector('#title');
   const priceInput = document.querySelector('#price');
   const type = document.querySelector('#type');
+  const timeIn = document.querySelector('#timein');
+  const timeOut = document.querySelector('#timeout');
 
   titleInput.addEventListener('invalid', () => {
     if (titleInput.validity.tooShort) {
@@ -32,6 +34,14 @@ const validation = function () {
   type.addEventListener('change', (evt) => {
     priceInput.min = prices[evt.target.value];
     priceInput.placeholder = prices[evt.target.value];
+  });
+
+  timeIn.addEventListener('change', (evt) => {
+    timeOut.value = evt.target.value;
+  });
+
+  timeOut.addEventListener('change', (evt) => {
+    timeIn.value = evt.target.value;
   });
 };
 
