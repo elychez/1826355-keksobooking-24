@@ -1,14 +1,22 @@
 import {generateMockData} from './mocks.js';
 import {renderCard} from './cards.js';
 
+const MAIN_MARKER = {
+  lat: 35.652832,
+  lng: 139.839478,
+};
+const address = document.querySelector('#address');
+const MAIN_PIN_SIZE = [52, 52];
+const MAIN_PIN_ANCHOR_SIZE = [26, 52];
+const ICON_SIZE = [40, 40];
+const ICON_ANCHOR_SIZE = [20, 40];
+
 const mapActivation = function () {
-  const address = document.querySelector('#address');
   const map = L.map('map-canvas')
     .setView({
-      lat: 35.652832,
-      lng: 139.839478,
+      lat: MAIN_MARKER.lat,
+      lng: MAIN_MARKER.lng,
     }, 10);
-
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
@@ -18,14 +26,14 @@ const mapActivation = function () {
 
   const mainPinIcon = L.icon({
     iconUrl: 'img/main-pin.svg',
-    iconSize: [52, 52],
-    iconAnchor: [26, 52],
+    iconSize: MAIN_PIN_SIZE,
+    iconAnchor: MAIN_PIN_ANCHOR_SIZE,
   });
 
   const mainPinMarker = L.marker(
     {
-      lat: 35.652832,
-      lng: 139.839478,
+      lat: MAIN_MARKER.lat,
+      lng: MAIN_MARKER.lng,
     },
     {
       draggable: true,
@@ -44,8 +52,8 @@ const mapActivation = function () {
   getMockData.forEach((item) => {
     const icon = L.icon({
       iconUrl: 'img/pin.svg',
-      iconSize: [40, 40],
-      iconAnchor: [20, 40],
+      iconSize: ICON_SIZE,
+      iconAnchor: ICON_ANCHOR_SIZE,
     });
     const marker = L.marker(
       {
@@ -64,4 +72,4 @@ const mapActivation = function () {
 };
 
 
-export {mapActivation};
+export {mapActivation, MAIN_MARKER};

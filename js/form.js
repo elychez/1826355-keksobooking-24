@@ -1,4 +1,4 @@
-import {mapActivation} from './map.js';
+import {mapActivation, MAIN_MARKER} from './map.js';
 
 const initValidation = function () {
 
@@ -34,6 +34,7 @@ const mapFilters = document.querySelector('.map__filters');
 const disableForm = main.querySelectorAll('fieldset');
 const disableFilters = mapFilters.querySelectorAll('select');
 const map = document.querySelector('.map__canvas');
+const address = document.querySelector('#address');
 
 const pageInactivation = function () {
   adForm.classList.add('ad-form--disabled');
@@ -54,6 +55,7 @@ map.addEventListener('click', () => {
     item.removeAttribute('disabled');
   });
   mapActivation();
+  address.value = `Lat: ${MAIN_MARKER.lat}, Lng: ${MAIN_MARKER.lng}`;
 }, {once: true});
 
 export {initValidation, pageInactivation};
