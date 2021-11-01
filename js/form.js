@@ -1,4 +1,4 @@
-import {mapActivation, MAIN_MARKER} from './map.js';
+import {mapActivation, MainMarker} from './map.js';
 
 const initValidation = function () {
 
@@ -55,7 +55,7 @@ map.addEventListener('click', () => {
     item.removeAttribute('disabled');
   });
   mapActivation();
-  address.value = `Lat: ${MAIN_MARKER.lat}, Lng: ${MAIN_MARKER.lng}`;
+  address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
 }, {once: true});
 
 export {initValidation, pageInactivation};

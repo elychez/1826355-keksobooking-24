@@ -1,9 +1,9 @@
 import {generateMockData} from './mocks.js';
 import {renderCard} from './cards.js';
 
-const MAIN_MARKER = {
-  lat: 35.652832,
-  lng: 139.839478,
+const MainMarker = {
+  LAT: 35.652832,
+  LNG: 139.839478,
 };
 const address = document.querySelector('#address');
 const MAIN_PIN_SIZE = [52, 52];
@@ -14,8 +14,8 @@ const ICON_ANCHOR_SIZE = [20, 40];
 const mapActivation = function () {
   const map = L.map('map-canvas')
     .setView({
-      lat: MAIN_MARKER.lat,
-      lng: MAIN_MARKER.lng,
+      lat: MainMarker.LAT,
+      lng: MainMarker.LNG,
     }, 10);
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -32,8 +32,8 @@ const mapActivation = function () {
 
   const mainPinMarker = L.marker(
     {
-      lat: MAIN_MARKER.lat,
-      lng: MAIN_MARKER.lng,
+      lat: MainMarker.LAT,
+      lng: MainMarker.LNG,
     },
     {
       draggable: true,
@@ -72,4 +72,4 @@ const mapActivation = function () {
 };
 
 
-export {mapActivation, MAIN_MARKER};
+export {mapActivation, MainMarker};
