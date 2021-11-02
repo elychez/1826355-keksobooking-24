@@ -6,7 +6,6 @@ const flatTypes = {
   hotel: 'Отель',
 };
 
-const mapCanvas = document.querySelector('#map-canvas');
 const card = document.querySelector('#card').content.querySelector('.popup');
 const renderCard = function (cardData) {
   const cardNode = card.cloneNode(true);
@@ -37,7 +36,7 @@ const renderCard = function (cardData) {
     feature.classList.add('popup__feature', `popup__feature--${cardData.offer.features[i]}`);
     cardFeatures.appendChild(feature);
   }
-  mapCanvas.appendChild(cardNode);
+  return cardNode;
 };
 
 export {renderCard};
