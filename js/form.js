@@ -1,4 +1,6 @@
 import {mapActivation, MainMarker} from './map.js';
+import {getData} from './data.js';
+import {mainPinMarker} from './map.js';
 
 const initValidation = function () {
 
@@ -35,6 +37,24 @@ const disableForm = main.querySelectorAll('fieldset');
 const disableFilters = mapFilters.querySelectorAll('select');
 const map = document.querySelector('.map__canvas');
 const address = document.querySelector('#address');
+const error = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
+const errorButton = error.querySelector('.error__button');
+const resetButton = adForm.querySelector('.ad-form__reset');
+
+const onErrorMessage = function (errorMessage) {
+  error.querySelector('p').textContent = errorMessage;
+  main.appendChild(error);
+  document.addEventListener('keydown', (evt) => {
+    if (evt.keyCode === 27) {
+      error.remove();
+      document.removeEventListener('keydown', errorButton);
+    }
+  });
+  errorButton.addEventListener('click', () => {
+    error.remove();
+    document.removeEventListener('keydown', errorButton);
+  });
+};
 
 const pageInactivation = function () {
   adForm.classList.add('ad-form--disabled');
@@ -46,7 +66,7 @@ const pageInactivation = function () {
   });
 };
 
-map.addEventListener('click', () => {
+const activationOnClick = function () {
   adForm.classList.remove('ad-form--disabled');
   disableForm.forEach((item) => {
     item.removeAttribute('disabled');
@@ -54,8 +74,21 @@ map.addEventListener('click', () => {
   disableFilters.forEach((item) => {
     item.removeAttribute('disabled');
   });
-  mapActivation();
+  getData((data) => {
+    mapActivation(data);
+  }, (errorMessage) => onErrorMessage(errorMessage));
   address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
-}, {once: true});
+  map.removeEventListener('mousedown', activationOnClick);
+};
+
+map.addEventListener('mousedown', activationOnClick);
+
+resetButton.addEventListener('click', () => {
+  mainPinMarker.setLatLng([
+    MainMarker.LAT,
+    MainMarker.LNG,
+  ]);
+  address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
+});
 
 export {initValidation, pageInactivation};

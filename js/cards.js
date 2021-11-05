@@ -20,7 +20,7 @@ const renderCard = function (cardData) {
   const cardPhotos = cardNode.querySelector('.popup__photos');
   const cardPhoto = cardPhotos.querySelector('.popup__photo');
   cardPhotos.removeChild(cardPhoto);
-  if (cardData.offer.photos.length > 0) {
+  if (cardData.offer.photos) {
     cardData.offer.photos.forEach((item) => {
       const newPhoto = cardPhoto.cloneNode(false);
       cardPhotos.appendChild(newPhoto);
@@ -31,10 +31,12 @@ const renderCard = function (cardData) {
   }
   const cardFeatures = cardNode.querySelector('.popup__features');
   cardFeatures.innerHTML = '';
-  for (let i = 0; i < cardData.offer.features.length; i++) {
-    const feature = document.createElement('li');
-    feature.classList.add('popup__feature', `popup__feature--${cardData.offer.features[i]}`);
-    cardFeatures.appendChild(feature);
+  if (cardData.offer.features) {
+    for (let i = 0; i < cardData.offer.features.length; i++) {
+      const feature = document.createElement('li');
+      feature.classList.add('popup__feature', `popup__feature--${cardData.offer.features[i]}`);
+      cardFeatures.appendChild(feature);
+    }
   }
   return cardNode;
 };

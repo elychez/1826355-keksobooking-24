@@ -1,4 +1,3 @@
-import {generateMockData} from './mocks.js';
 import {renderCard} from './cards.js';
 
 const MainMarker = {
@@ -11,7 +10,31 @@ const MAIN_PIN_ANCHOR_SIZE = [26, 52];
 const ICON_SIZE = [40, 40];
 const ICON_ANCHOR_SIZE = [20, 40];
 
-const mapActivation = function () {
+const mainPinIcon = L.icon({
+  iconUrl: 'img/main-pin.svg',
+  iconSize: MAIN_PIN_SIZE,
+  iconAnchor: MAIN_PIN_ANCHOR_SIZE,
+});
+
+const mainPinMarker = L.marker(
+  {
+    lat: MainMarker.LAT,
+    lng: MainMarker.LNG,
+  },
+  {
+    draggable: true,
+    icon: mainPinIcon,
+  },
+);
+
+mainPinMarker.on('moveend', (evt) => {
+  const getLatLng = evt.target.getLatLng();
+  const getLat = getLatLng.lat.toFixed(5);
+  const getLng = getLatLng.lng.toFixed(5);
+  address.value = `Lat: ${getLat}, Lng: ${getLng}`;
+});
+
+const mapActivation = function (data) {
   const map = L.map('map-canvas')
     .setView({
       lat: MainMarker.LAT,
@@ -23,33 +46,9 @@ const mapActivation = function () {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     },
   ).addTo(map);
-
-  const mainPinIcon = L.icon({
-    iconUrl: 'img/main-pin.svg',
-    iconSize: MAIN_PIN_SIZE,
-    iconAnchor: MAIN_PIN_ANCHOR_SIZE,
-  });
-
-  const mainPinMarker = L.marker(
-    {
-      lat: MainMarker.LAT,
-      lng: MainMarker.LNG,
-    },
-    {
-      draggable: true,
-      icon: mainPinIcon,
-    },
-  );
   mainPinMarker.addTo(map);
-  mainPinMarker.on('moveend', (evt) => {
-    const getLatLng = evt.target.getLatLng();
-    const getLat = getLatLng.lat.toFixed(5);
-    const getLng = getLatLng.lng.toFixed(5);
-    address.value = `Lat: ${getLat}, Lng: ${getLng}`;
-  });
 
-  const getMockData = generateMockData();
-  getMockData.forEach((item) => {
+  data.forEach((item) => {
     const icon = L.icon({
       iconUrl: 'img/pin.svg',
       iconSize: ICON_SIZE,
@@ -72,4 +71,4 @@ const mapActivation = function () {
 };
 
 
-export {mapActivation, MainMarker};
+export {mapActivation, MainMarker, mainPinMarker};
