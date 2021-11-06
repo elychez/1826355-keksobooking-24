@@ -1,4 +1,5 @@
-import {MainMarker, mainPinMarker} from './map.js';
+import {MainMarker, mainPinMarker, centerMap} from './map.js';
+import {pageInactivation} from './form.js';
 
 const adForm = document.querySelector('.ad-form');
 const success = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
@@ -6,31 +7,28 @@ const error = document.querySelector('#error').content.querySelector('.error');
 const main = document.querySelector('main');
 const address = document.querySelector('#address');
 
+const resetPage = function () {
+  success.remove();
+  adForm.reset();
+  mainPinMarker.setLatLng([
+    MainMarker.LAT,
+    MainMarker.LNG,
+  ]);
+  address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
+};
+
 const onKeydownCloseSuccessMessage = function (evt) {
   if (evt.key === 'Escape') {
-    success.remove();
-    adForm.reset();
+    resetPage();
     document.removeEventListener('keydown', onKeydownCloseSuccessMessage);
-    mainPinMarker.setLatLng([
-      MainMarker.LAT,
-      MainMarker.LNG,
-    ]);
-    address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
   }
 };
 
 const onClickCloseSuccessMessage = function (evt) {
   if (evt.which === 1) {
     if (evt.target !== evt.currentTarget) {
-      success.remove();
-      adForm.reset();
+      resetPage();
       document.removeEventListener('keydown', onKeydownCloseSuccessMessage);
-      document.removeEventListener('click', onClickCloseSuccessMessage);
-      mainPinMarker.setLatLng([
-        MainMarker.LAT,
-        MainMarker.LNG,
-      ]);
-      address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
     }
   }
 };
@@ -43,6 +41,8 @@ const onSuccess = function () {
     MainMarker.LAT,
     MainMarker.LNG,
   ]);
+  pageInactivation();
+  centerMap();
 };
 
 const onKeyDownCloseErrorMessage = function (evt) {
@@ -78,12 +78,18 @@ adForm.addEventListener('submit', (evt) => {
       type: 'multipart/form-data',
     },
   )
-    .then(() => onSuccess())
+    .then((response) => {
+      if (response.ok) {
+        onSuccess();
+      } else {
+        onError();
+      }
+    })
     .catch(() => onError());
 });
 
 const getData = function (onSuccessResult, onFailResult) {
-  fetch('https://24.javascript.pages.academy/keksobooking/data')
+  fetch('https://24.javascript.pages.academy/keksobooking/dat')
     .then((response) => response.json())
     .then((result) => onSuccessResult(result))
     .catch(() => onFailResult('Не удалось загрузить данные!'));

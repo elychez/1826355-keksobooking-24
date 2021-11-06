@@ -32,11 +32,11 @@ const renderCard = function (cardData) {
   const cardFeatures = cardNode.querySelector('.popup__features');
   cardFeatures.innerHTML = '';
   if (cardData.offer.features) {
-    for (let i = 0; i < cardData.offer.features.length; i++) {
+    cardData.offer.features.forEach((featureItem) => {
       const feature = document.createElement('li');
-      feature.classList.add('popup__feature', `popup__feature--${cardData.offer.features[i]}`);
+      feature.classList.add('popup__feature', `popup__feature--${featureItem}`);
       cardFeatures.appendChild(feature);
-    }
+    });
   }
   return cardNode;
 };

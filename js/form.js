@@ -1,6 +1,6 @@
 import {mapActivation, MainMarker} from './map.js';
 import {getData} from './data.js';
-import {mainPinMarker} from './map.js';
+import {mainPinMarker, centerMap} from './map.js';
 
 const initValidation = function () {
 
@@ -35,7 +35,6 @@ const main = document.querySelector('main');
 const mapFilters = document.querySelector('.map__filters');
 const disableForm = main.querySelectorAll('fieldset');
 const disableFilters = mapFilters.querySelectorAll('select');
-const map = document.querySelector('.map__canvas');
 const address = document.querySelector('#address');
 const error = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
 const errorButton = error.querySelector('.error__button');
@@ -66,7 +65,7 @@ const pageInactivation = function () {
   });
 };
 
-const activationOnClick = function () {
+const activateForm = function () {
   adForm.classList.remove('ad-form--disabled');
   disableForm.forEach((item) => {
     item.removeAttribute('disabled');
@@ -74,14 +73,16 @@ const activationOnClick = function () {
   disableFilters.forEach((item) => {
     item.removeAttribute('disabled');
   });
-  getData((data) => {
-    mapActivation(data);
-  }, (errorMessage) => onErrorMessage(errorMessage));
-  address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
-  map.removeEventListener('mousedown', activationOnClick);
 };
 
-map.addEventListener('mousedown', activationOnClick);
+const activatePage = function () {
+  getData((data) => {
+    mapActivation(data);
+    activateForm();
+  }, (errorMessage) => onErrorMessage(errorMessage));
+  address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
+};
+
 
 resetButton.addEventListener('click', () => {
   mainPinMarker.setLatLng([
@@ -89,6 +90,7 @@ resetButton.addEventListener('click', () => {
     MainMarker.LNG,
   ]);
   address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
+  centerMap();
 });
 
-export {initValidation, pageInactivation};
+export {initValidation, pageInactivation, activatePage};

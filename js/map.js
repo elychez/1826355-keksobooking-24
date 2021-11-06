@@ -16,6 +16,8 @@ const mainPinIcon = L.icon({
   iconAnchor: MAIN_PIN_ANCHOR_SIZE,
 });
 
+const map = L.map('map-canvas');
+
 const mainPinMarker = L.marker(
   {
     lat: MainMarker.LAT,
@@ -34,8 +36,12 @@ mainPinMarker.on('moveend', (evt) => {
   address.value = `Lat: ${getLat}, Lng: ${getLng}`;
 });
 
+const centerMap = function () {
+  map.flyTo([MainMarker.LAT, MainMarker.LNG], 10);
+};
+
 const mapActivation = function (data) {
-  const map = L.map('map-canvas')
+  map
     .setView({
       lat: MainMarker.LAT,
       lng: MainMarker.LNG,
@@ -71,4 +77,4 @@ const mapActivation = function (data) {
 };
 
 
-export {mapActivation, MainMarker, mainPinMarker};
+export {mapActivation, MainMarker, mainPinMarker, centerMap};
