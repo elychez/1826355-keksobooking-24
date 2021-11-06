@@ -1,5 +1,4 @@
-import {initValidation, pageInactivation, activatePage} from './form.js';
+import {initValidation, pageInactivation} from './form.js';
 
 initValidation();
 pageInactivation();
-activatePage();

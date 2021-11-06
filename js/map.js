@@ -77,4 +77,4 @@ const mapActivation = function (data) {
 };
 
 
-export {mapActivation, MainMarker, mainPinMarker, centerMap};
+export {mapActivation, MainMarker, mainPinMarker, centerMap, map};
