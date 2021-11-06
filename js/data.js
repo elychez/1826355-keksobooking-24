@@ -89,7 +89,7 @@ adForm.addEventListener('submit', (evt) => {
 });
 
 const getData = function (onSuccessResult, onFailResult) {
-  fetch('https://24.javascript.pages.academy/keksobooking/dat')
+  fetch('https://24.javascript.pages.academy/keksobooking/data')
     .then((response) => response.json())
     .then((result) => onSuccessResult(result))
     .catch(() => onFailResult('Не удалось загрузить данные!'));
