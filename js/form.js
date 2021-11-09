@@ -1,4 +1,6 @@
 import {mapActivation, MainMarker} from './map.js';
+import {getData} from './data.js';
+import {mainPinMarker, centerMap} from './map.js';
 
 const initValidation = function () {
 
@@ -33,8 +35,25 @@ const main = document.querySelector('main');
 const mapFilters = document.querySelector('.map__filters');
 const disableForm = main.querySelectorAll('fieldset');
 const disableFilters = mapFilters.querySelectorAll('select');
-const map = document.querySelector('.map__canvas');
 const address = document.querySelector('#address');
+const error = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
+const errorButton = error.querySelector('.error__button');
+const resetButton = adForm.querySelector('.ad-form__reset');
+
+const onErrorMessage = function (errorMessage) {
+  error.querySelector('p').textContent = errorMessage;
+  main.appendChild(error);
+  document.addEventListener('keydown', (evt) => {
+    if (evt.keyCode === 27) {
+      error.remove();
+      document.removeEventListener('keydown', errorButton);
+    }
+  });
+  errorButton.addEventListener('click', () => {
+    error.remove();
+    document.removeEventListener('keydown', errorButton);
+  });
+};
 
 const pageInactivation = function () {
   adForm.classList.add('ad-form--disabled');
@@ -46,7 +65,7 @@ const pageInactivation = function () {
   });
 };
 
-map.addEventListener('click', () => {
+const activateForms = () => {
   adForm.classList.remove('ad-form--disabled');
   disableForm.forEach((item) => {
     item.removeAttribute('disabled');
@@ -54,8 +73,22 @@ map.addEventListener('click', () => {
   disableFilters.forEach((item) => {
     item.removeAttribute('disabled');
   });
-  mapActivation();
-  address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
-}, {once: true});
+};
 
-export {initValidation, pageInactivation};
+const activation = function () {
+  getData((data) => {
+    mapActivation(data);
+  }, (errorMessage) => onErrorMessage(errorMessage));
+  address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
+};
+
+resetButton.addEventListener('click', () => {
+  mainPinMarker.setLatLng([
+    MainMarker.LAT,
+    MainMarker.LNG,
+  ]);
+  address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
+  centerMap();
+});
+
+export {initValidation, pageInactivation, activation, activateForms};
