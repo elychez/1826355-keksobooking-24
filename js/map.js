@@ -1,4 +1,5 @@
 import {renderCard} from './cards.js';
+import {activateForms} from './form.js';
 
 const MainMarker = {
   LAT: 35.652832,
@@ -17,6 +18,10 @@ const mainPinIcon = L.icon({
 });
 
 const map = L.map('map-canvas');
+
+map.on('load', () => {
+  activateForms();
+});
 
 const mainPinMarker = L.marker(
   {
@@ -75,6 +80,5 @@ const mapActivation = function (data) {
       .bindPopup(renderCard(item));
   });
 };
-
 
 export {mapActivation, MainMarker, mainPinMarker, centerMap, map};

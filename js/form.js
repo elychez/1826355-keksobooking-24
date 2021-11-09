@@ -39,7 +39,6 @@ const address = document.querySelector('#address');
 const error = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
 const errorButton = error.querySelector('.error__button');
 const resetButton = adForm.querySelector('.ad-form__reset');
-const map = document.querySelector('.map__canvas');
 
 const onErrorMessage = function (errorMessage) {
   error.querySelector('p').textContent = errorMessage;
@@ -66,7 +65,7 @@ const pageInactivation = function () {
   });
 };
 
-const activationOnClick = function () {
+const activateForms = () => {
   adForm.classList.remove('ad-form--disabled');
   disableForm.forEach((item) => {
     item.removeAttribute('disabled');
@@ -74,14 +73,14 @@ const activationOnClick = function () {
   disableFilters.forEach((item) => {
     item.removeAttribute('disabled');
   });
+};
+
+const activation = function () {
   getData((data) => {
     mapActivation(data);
   }, (errorMessage) => onErrorMessage(errorMessage));
   address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
-  map.removeEventListener('mousedown', activationOnClick);
 };
-
-map.addEventListener('mousedown', activationOnClick);
 
 resetButton.addEventListener('click', () => {
   mainPinMarker.setLatLng([
@@ -92,4 +91,4 @@ resetButton.addEventListener('click', () => {
   centerMap();
 });
 
-export {initValidation, pageInactivation, activationOnClick};
+export {initValidation, pageInactivation, activation, activateForms};
