@@ -1,4 +1,4 @@
-import {MainMarker, mainPinMarker} from './map.js';
+import {centerMap, MainMarker, mainPinMarker} from './map.js';
 
 const adForm = document.querySelector('.ad-form');
 const success = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
@@ -13,6 +13,7 @@ const resetPage = function () {
     MainMarker.LAT,
     MainMarker.LNG,
   ]);
+  centerMap();
   address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
 };
 
