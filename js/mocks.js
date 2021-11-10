@@ -1,7 +1,7 @@
 import {CHECKIN, CHECKOUT, Coordinates, DESCRIPTIONS, FEATURES, PHOTO_NUMBERS, PHOTOS, TITLES, TYPE} from './const.js';
 import {getRandomIntInclusive, getRandomItem, getRandomArbitrary, shuffleArray} from './utils.js';
 
-const generateMockData = function () {
+const generateMockData = () => {
   const data = [];
   for (let i = 0; i < 10; i++) {
     const lat = getRandomArbitrary(Coordinates.MIN_LATITUDE, Coordinates.MAX_LATITUDE, 6);

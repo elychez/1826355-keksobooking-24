@@ -6,7 +6,7 @@ const error = document.querySelector('#error').content.querySelector('.error');
 const main = document.querySelector('main');
 const address = document.querySelector('#address');
 
-const resetPage = function () {
+const resetPage = () => {
   success.remove();
   adForm.reset();
   mainPinMarker.setLatLng([
@@ -17,14 +17,14 @@ const resetPage = function () {
   address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
 };
 
-const onKeydownCloseSuccessMessage = function (evt) {
+const onKeydownCloseSuccessMessage = (evt) => {
   if (evt.key === 'Escape') {
     resetPage();
     document.removeEventListener('keydown', onKeydownCloseSuccessMessage);
   }
 };
 
-const onClickCloseSuccessMessage = function (evt) {
+const onClickCloseSuccessMessage = (evt) => {
   if (evt.which === 1) {
     if (evt.target !== evt.currentTarget) {
       resetPage();
@@ -34,20 +34,20 @@ const onClickCloseSuccessMessage = function (evt) {
   }
 };
 
-const onSuccess = function () {
+const onSuccess = () => {
   main.appendChild(success);
   document.addEventListener('keydown', onKeydownCloseSuccessMessage);
   document.addEventListener('click', onClickCloseSuccessMessage);
 };
 
-const onKeyDownCloseErrorMessage = function (evt) {
+const onKeyDownCloseErrorMessage = (evt) => {
   if (evt.key === 'Escape') {
     error.remove();
     document.removeEventListener('keydown', onKeyDownCloseErrorMessage);
   }
 };
 
-const onClickCloseErrorMessage = function (evt) {
+const onClickCloseErrorMessage = (evt) => {
   if (evt.which === 1) {
     if (evt.target !== evt.currentTarget) {
       error.remove();
@@ -56,7 +56,7 @@ const onClickCloseErrorMessage = function (evt) {
   }
 };
 
-const onError = function () {
+const onError = () => {
   main.appendChild(error);
   document.addEventListener('keydown', onKeyDownCloseErrorMessage);
   document.addEventListener('click', onClickCloseErrorMessage);
@@ -83,11 +83,12 @@ adForm.addEventListener('submit', (evt) => {
     .catch(() => onError());
 });
 
-const getData = function (onSuccessResult, onFailResult) {
+const getData = (onSuccessResult) => {
   fetch('https://24.javascript.pages.academy/keksobooking/data')
     .then((response) => response.json())
     .then((result) => onSuccessResult(result))
-    .catch(() => onFailResult('Не удалось загрузить данные!'));
+    .catch(() => onError());
+  address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
 };
 
 export {getData, onKeyDownCloseErrorMessage, onClickCloseErrorMessage};

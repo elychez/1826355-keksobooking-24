@@ -1,8 +1,7 @@
-import {mapActivation, MainMarker} from './map.js';
-import {getData} from './data.js';
+import {MainMarker} from './map.js';
 import {mainPinMarker, centerMap} from './map.js';
 
-const initValidation = function () {
+const initValidation = () => {
 
   const prices = {
     bungalow: 0,
@@ -36,26 +35,9 @@ const mapFilters = document.querySelector('.map__filters');
 const disableForm = main.querySelectorAll('fieldset');
 const disableFilters = mapFilters.querySelectorAll('select');
 const address = document.querySelector('#address');
-const error = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
-const errorButton = error.querySelector('.error__button');
 const resetButton = adForm.querySelector('.ad-form__reset');
 
-const onErrorMessage = function (errorMessage) {
-  error.querySelector('p').textContent = errorMessage;
-  main.appendChild(error);
-  document.addEventListener('keydown', (evt) => {
-    if (evt.keyCode === 27) {
-      error.remove();
-      document.removeEventListener('keydown', errorButton);
-    }
-  });
-  errorButton.addEventListener('click', () => {
-    error.remove();
-    document.removeEventListener('keydown', errorButton);
-  });
-};
-
-const pageInactivation = function () {
+const pageInactivation = () => {
   adForm.classList.add('ad-form--disabled');
   disableForm.forEach((item) => {
     item.setAttribute('disabled', true);
@@ -75,13 +57,6 @@ const activateForms = () => {
   });
 };
 
-const activation = function () {
-  getData((data) => {
-    mapActivation(data);
-  }, (errorMessage) => onErrorMessage(errorMessage));
-  address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
-};
-
 resetButton.addEventListener('click', () => {
   mainPinMarker.setLatLng([
     MainMarker.LAT,
@@ -91,4 +66,4 @@ resetButton.addEventListener('click', () => {
   centerMap();
 });
 
-export {initValidation, pageInactivation, activation, activateForms};
+export {initValidation, pageInactivation, activateForms};

@@ -1,4 +1,4 @@
-const getRandomIntInclusive = function(min, max) {
+const getRandomIntInclusive = (min, max) => {
   if (min >= 0 && max >= min) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -6,18 +6,16 @@ const getRandomIntInclusive = function(min, max) {
   }
 };
 
-const getRandomItem = function (arr) {
-  return arr[getRandomIntInclusive(0, arr.length - 1)];
-};
+const getRandomItem = (arr) => arr[getRandomIntInclusive(0, arr.length - 1)];
 
-const getRandomArbitrary = function(min, max, float) {
+const getRandomArbitrary = (min, max, float) => {
   if (min >= 0 && max >= min) {
     const randomNumber = Math.random() * (max - min) + min;
     return randomNumber.toFixed(float);
   }
 };
 
-const shuffleArray = function(data) {
+const shuffleArray = (data) => {
   const array = data.slice();
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
