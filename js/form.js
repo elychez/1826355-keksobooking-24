@@ -14,6 +14,34 @@ const initValidation = () => {
   const type = document.querySelector('#type');
   const timeIn = document.querySelector('#timein');
   const timeOut = document.querySelector('#timeout');
+  const capacity = document.querySelector('#capacity');
+  const rooms = document.querySelector('#room_number');
+
+  capacity.addEventListener('change', (evt) => {
+    switch(evt.target.value) {
+      case '1':
+        return rooms.value = 1;
+      case '2':
+        return rooms.value = 2;
+      case '3':
+        return rooms.value = 3;
+      case '0':
+        return rooms.value = 100;
+    }
+  });
+
+  rooms.addEventListener('change', (evt) => {
+    switch(evt.target.value) {
+      case '1':
+        return capacity.value = 1;
+      case '2':
+        return capacity.value = 2;
+      case '3':
+        return capacity.value = 3;
+      case '100':
+        return capacity.value = 0;
+    }
+  });
 
   type.addEventListener('change', (evt) => {
     priceInput.min = prices[evt.target.value];
