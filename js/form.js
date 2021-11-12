@@ -16,30 +16,16 @@ const initValidation = () => {
   const timeOut = document.querySelector('#timeout');
   const capacity = document.querySelector('#capacity');
   const rooms = document.querySelector('#room_number');
+  const submitBtn = document.querySelector('.ad-form__submit');
 
-  capacity.addEventListener('change', (evt) => {
-    switch(evt.target.value) {
-      case '1':
-        return rooms.value = 1;
-      case '2':
-        return rooms.value = 2;
-      case '3':
-        return rooms.value = 3;
-      case '0':
-        return rooms.value = 100;
-    }
-  });
-
-  rooms.addEventListener('change', (evt) => {
-    switch(evt.target.value) {
-      case '1':
-        return capacity.value = 1;
-      case '2':
-        return capacity.value = 2;
-      case '3':
-        return capacity.value = 3;
-      case '100':
-        return capacity.value = 0;
+  submitBtn.addEventListener('click', () => {
+    if (rooms.value !== capacity.value) {
+      capacity.setCustomValidity('Число гостей не соответствует числу комнат!');
+      if (Number(rooms.value) === 100 && Number(capacity.value) === 0) {
+        capacity.setCustomValidity('');
+      }
+    } else {
+      capacity.setCustomValidity('');
     }
   });
 

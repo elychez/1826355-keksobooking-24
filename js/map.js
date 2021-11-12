@@ -2,6 +2,12 @@ import {renderCard} from './cards.js';
 import {activateForms, initValidation, pageInactivation} from './form.js';
 import {debounce} from './utils/debounce.js';
 
+const MAIN_PIN_SIZE = [52, 52];
+const MAIN_PIN_ANCHOR_SIZE = [26, 52];
+const ICON_SIZE = [40, 40];
+const ICON_ANCHOR_SIZE = [20, 40];
+const MAX_ADVERT_COUNT = 10;
+
 const MainMarker = {
   LAT: 35.652832,
   LNG: 139.839478,
@@ -12,11 +18,7 @@ const housingPrice = document.querySelector('#housing-price');
 const housingRooms = document.querySelector('#housing-rooms');
 const housingGuests = document.querySelector('#housing-guests');
 const mapFilters = document.querySelector('.map__filters');
-const MAIN_PIN_SIZE = [52, 52];
-const MAIN_PIN_ANCHOR_SIZE = [26, 52];
-const ICON_SIZE = [40, 40];
-const ICON_ANCHOR_SIZE = [20, 40];
-const MAX_ADVERT_COUNT = 10;
+const checkboxes = mapFilters.querySelectorAll('.map__checkbox');
 const markers = [];
 
 const priceRange = {
@@ -83,12 +85,7 @@ const centerMap = () => {
 
 mainPinMarker.addTo(map);
 
-const filterByHouse = (advert) => {
-  if (housingType.value === 'any') {
-    return true;
-  }
-  return housingType.value === advert.offer.type;
-};
+const filterByHouse = (advert) => housingType.value === 'any' || housingType.value === advert.offer.type;
 
 const filterByPrice = (advert) => {
   const priceRangeValue = priceRange[housingPrice.value];
@@ -101,41 +98,57 @@ const filterByGuests = (advert) => housingGuests.value === 'any' || advert.offer
 
 const filterByFeatures = (advert) => {
   const features = advert.offer.features || [];
-  const featuresList = mapFilters.querySelectorAll('.map__checkbox:checked');
+  const featuresList = Array.from(checkboxes).filter((checkbox) => checkbox.checked);
   const selectedFeatures = Array.from(featuresList).map((item) => item.value);
   return !selectedFeatures.some((element) => !features.includes(element));
+};
+
+const filters = [
+  filterByHouse,
+  filterByPrice,
+  filterByRooms,
+  filterByGuests,
+  filterByFeatures,
+];
+
+const isSuitableAdvert = (advert) => filters.every((filter) => filter(advert));
+
+
+const filterAdverts = (adverts) => {
+  const filteredAdverts = [];
+  for (let i = 0; i < adverts.length && filteredAdverts.length < MAX_ADVERT_COUNT; i++) {
+    const advert = adverts[i];
+    if (isSuitableAdvert(advert)) {
+      filteredAdverts.push(advert);
+    }
+  }
+  return filteredAdverts;
 };
 
 const mapActivation = (data) => {
   markers.forEach((marker) => {
     marker.remove();
   });
-  data
-    .filter(filterByHouse)
-    .filter(filterByPrice)
-    .filter(filterByRooms)
-    .filter(filterByGuests)
-    .filter(filterByFeatures)
-    .slice(0, MAX_ADVERT_COUNT).forEach((item) => {
-      const icon = L.icon({
-        iconUrl: 'img/pin.svg',
-        iconSize: ICON_SIZE,
-        iconAnchor: ICON_ANCHOR_SIZE,
-      });
-      const marker = L.marker(
-        {
-          lat: item.location.lat,
-          lng: item.location.lng,
-        },
-        {
-          icon,
-        },
-      );
-      markers.push(marker);
-      marker
-        .addTo(map)
-        .bindPopup(renderCard(item));
+  filterAdverts(data).forEach((item) => {
+    const icon = L.icon({
+      iconUrl: 'img/pin.svg',
+      iconSize: ICON_SIZE,
+      iconAnchor: ICON_ANCHOR_SIZE,
     });
+    const marker = L.marker(
+      {
+        lat: item.location.lat,
+        lng: item.location.lng,
+      },
+      {
+        icon,
+      },
+    );
+    markers.push(marker);
+    marker
+      .addTo(map)
+      .bindPopup(renderCard(item));
+  });
 };
 
 const setFilterForm = (advertList) => {
