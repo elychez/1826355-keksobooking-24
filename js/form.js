@@ -19,7 +19,7 @@ const initValidation = () => {
   const submitBtn = document.querySelector('.ad-form__submit');
 
   submitBtn.addEventListener('click', () => {
-    if (rooms.value !== capacity.value) {
+    if (rooms.value < capacity.value || (Number(rooms.value) === 100)) {
       capacity.setCustomValidity('Число гостей не соответствует числу комнат!');
       if (Number(rooms.value) === 100 && Number(capacity.value) === 0) {
         capacity.setCustomValidity('');
