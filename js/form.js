@@ -1,48 +1,14 @@
-import {MainMarker} from './map.js';
+import {MainMarker, mapActivation, setFilterForm} from './map.js';
 import {mainPinMarker, centerMap} from './map.js';
+import {getData} from './api.js';
 
-const initValidation = () => {
-
-  const prices = {
-    bungalow: 0,
-    flat: 100,
-    hotel: 3000,
-    house: 5000,
-    palace: 10000,
-  };
-  const priceInput = document.querySelector('#price');
-  const type = document.querySelector('#type');
-  const timeIn = document.querySelector('#timein');
-  const timeOut = document.querySelector('#timeout');
-  const capacity = document.querySelector('#capacity');
-  const rooms = document.querySelector('#room_number');
-  const submitBtn = document.querySelector('.ad-form__submit');
-
-  submitBtn.addEventListener('click', () => {
-    if (rooms.value < capacity.value || (Number(rooms.value) === 100)) {
-      capacity.setCustomValidity('Число гостей не соответствует числу комнат!');
-      if (Number(rooms.value) === 100 && Number(capacity.value) === 0) {
-        capacity.setCustomValidity('');
-      }
-    } else {
-      capacity.setCustomValidity('');
-    }
-  });
-
-  type.addEventListener('change', (evt) => {
-    priceInput.min = prices[evt.target.value];
-    priceInput.placeholder = prices[evt.target.value];
-  });
-
-  timeIn.addEventListener('change', (evt) => {
-    timeOut.value = evt.target.value;
-  });
-
-  timeOut.addEventListener('change', (evt) => {
-    timeIn.value = evt.target.value;
-  });
+const prices = {
+  bungalow: 0,
+  flat: 1000,
+  hotel: 3000,
+  house: 5000,
+  palace: 10000,
 };
-
 const adForm = document.querySelector('.ad-form');
 const main = document.querySelector('main');
 const mapFilters = document.querySelector('.map__filters');
@@ -50,6 +16,41 @@ const disableForm = main.querySelectorAll('fieldset');
 const disableFilters = mapFilters.querySelectorAll('select');
 const address = document.querySelector('#address');
 const resetButton = adForm.querySelector('.ad-form__reset');
+const formItems = document.querySelectorAll('.ad-form__element > input, .ad-form__element > select');
+const priceInput = document.querySelector('#price');
+const type = document.querySelector('#type');
+const timeIn = document.querySelector('#timein');
+const timeOut = document.querySelector('#timeout');
+const capacity = document.querySelector('#capacity');
+const rooms = document.querySelector('#room_number');
+const submitBtn = document.querySelector('.ad-form__submit');
+
+submitBtn.addEventListener('click', () => {
+  if (rooms.value < capacity.value || (Number(rooms.value) === 100)) {
+    capacity.setCustomValidity('Число гостей не соответствует числу комнат!');
+    if (Number(rooms.value) === 100 && Number(capacity.value) === 0) {
+      capacity.setCustomValidity('');
+    }
+  } else {
+    capacity.setCustomValidity('');
+  }
+  formItems.forEach((item) => {
+    item.removeAttribute('style');
+  });
+});
+
+type.addEventListener('change', (evt) => {
+  priceInput.min = prices[evt.target.value];
+  priceInput.placeholder = prices[evt.target.value];
+});
+
+timeIn.addEventListener('change', (evt) => {
+  timeOut.value = evt.target.value;
+});
+
+timeOut.addEventListener('change', (evt) => {
+  timeIn.value = evt.target.value;
+});
 
 const pageInactivation = () => {
   adForm.classList.add('ad-form--disabled');
@@ -71,13 +72,26 @@ const activateForms = () => {
   });
 };
 
-resetButton.addEventListener('click', () => {
+formItems.forEach((item) => {
+  item.addEventListener('invalid', (evt) => {
+    evt.target.style.border = '1px solid red';
+  });
+});
+
+resetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
   mainPinMarker.setLatLng([
     MainMarker.LAT,
     MainMarker.LNG,
   ]);
-  address.value = `Lat: ${MainMarker.LAT}, Lng: ${MainMarker.LNG}`;
   centerMap();
+  mapFilters.reset();
+  adForm.reset();
+  getData((data) => {
+    mapActivation(data);
+    setFilterForm(data);
+  });
+  address.value = `${MainMarker.LAT}, ${MainMarker.LNG}`;
 });
 
-export {initValidation, pageInactivation, activateForms};
+export {pageInactivation, activateForms};
