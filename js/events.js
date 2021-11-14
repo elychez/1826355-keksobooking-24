@@ -6,6 +6,7 @@ const success = document.querySelector('#success').content.querySelector('.succe
 const error = document.querySelector('#error').content.querySelector('.error');
 const main = document.querySelector('main');
 const address = document.querySelector('#address');
+const priceInput = document.querySelector('#price');
 const mapFilters = document.querySelector('.map__filters');
 
 const resetPage = () => {
@@ -18,6 +19,7 @@ const resetPage = () => {
   ]);
   centerMap();
   address.value = `${MainMarker.LAT}, ${MainMarker.LNG}`;
+  priceInput.placeholder = 1000;
   getData((data) => {
     mapActivation(data);
     setFilterForm(data);
