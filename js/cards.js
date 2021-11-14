@@ -7,7 +7,7 @@ const flatTypes = {
 };
 
 const card = document.querySelector('#card').content.querySelector('.popup');
-const renderCard = function (cardData) {
+const renderCard = (cardData) => {
   const cardNode = card.cloneNode(true);
   cardNode.querySelector('.popup__title').textContent = cardData.offer.title;
   cardNode.querySelector('.popup__text--address').textContent = cardData.offer.address;

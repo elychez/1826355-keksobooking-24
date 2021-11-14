@@ -1,5 +1,8 @@
-import {activation, initValidation, pageInactivation} from './form.js';
+import {mapActivation, setFilterForm} from './map.js';
+import {getData} from './api.js';
 
-initValidation();
-pageInactivation();
-activation();
+getData((data) => {
+  mapActivation(data);
+  setFilterForm(data);
+});
+

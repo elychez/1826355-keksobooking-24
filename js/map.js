@@ -1,15 +1,21 @@
 import {renderCard} from './cards.js';
-import {activateForms} from './form.js';
+import {activateForms, pageInactivation} from './form.js';
+import {debounce} from './utils/debounce.js';
+import {filterAdverts} from './filter.js';
+
+const MAIN_PIN_SIZE = [52, 52];
+const MAIN_PIN_ANCHOR_SIZE = [26, 52];
+const ICON_SIZE = [40, 40];
+const ICON_ANCHOR_SIZE = [20, 40];
+
+const mapFilters = document.querySelector('.map__filters');
 
 const MainMarker = {
   LAT: 35.652832,
   LNG: 139.839478,
 };
 const address = document.querySelector('#address');
-const MAIN_PIN_SIZE = [52, 52];
-const MAIN_PIN_ANCHOR_SIZE = [26, 52];
-const ICON_SIZE = [40, 40];
-const ICON_ANCHOR_SIZE = [20, 40];
+const markers = [];
 
 const mainPinIcon = L.icon({
   iconUrl: 'img/main-pin.svg',
@@ -19,9 +25,21 @@ const mainPinIcon = L.icon({
 
 const map = L.map('map-canvas');
 
+pageInactivation();
+
 map.on('load', () => {
   activateForms();
-});
+}).setView({
+  lat: MainMarker.LAT,
+  lng: MainMarker.LNG,
+}, 10);
+
+L.tileLayer(
+  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  },
+).addTo(map);
 
 const mainPinMarker = L.marker(
   {
@@ -38,28 +56,20 @@ mainPinMarker.on('moveend', (evt) => {
   const getLatLng = evt.target.getLatLng();
   const getLat = getLatLng.lat.toFixed(5);
   const getLng = getLatLng.lng.toFixed(5);
-  address.value = `Lat: ${getLat}, Lng: ${getLng}`;
+  address.value = `${getLat}, ${getLng}`;
 });
 
-const centerMap = function () {
+const centerMap = () => {
   map.flyTo([MainMarker.LAT, MainMarker.LNG], 10);
 };
 
-const mapActivation = function (data) {
-  map
-    .setView({
-      lat: MainMarker.LAT,
-      lng: MainMarker.LNG,
-    }, 10);
-  L.tileLayer(
-    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    },
-  ).addTo(map);
-  mainPinMarker.addTo(map);
+mainPinMarker.addTo(map);
 
-  data.forEach((item) => {
+const mapActivation = (data) => {
+  markers.forEach((marker) => {
+    marker.remove();
+  });
+  filterAdverts(data).forEach((item) => {
     const icon = L.icon({
       iconUrl: 'img/pin.svg',
       iconSize: ICON_SIZE,
@@ -74,11 +84,15 @@ const mapActivation = function (data) {
         icon,
       },
     );
-
+    markers.push(marker);
     marker
       .addTo(map)
       .bindPopup(renderCard(item));
   });
 };
 
-export {mapActivation, MainMarker, mainPinMarker, centerMap, map};
+const setFilterForm = (advertList) => {
+  mapFilters.addEventListener('change', debounce(() => mapActivation(advertList)));
+};
+
+export {mapActivation, MainMarker, mainPinMarker, centerMap, map, setFilterForm};
