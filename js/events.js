@@ -19,6 +19,7 @@ const resetPage = () => {
   ]);
   centerMap();
   address.value = `${MainMarker.LAT}, ${MainMarker.LNG}`;
+  priceInput.min = 1000;
   priceInput.placeholder = 1000;
   getData((data) => {
     mapActivation(data);

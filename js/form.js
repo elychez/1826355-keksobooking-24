@@ -87,6 +87,7 @@ resetButton.addEventListener('click', (evt) => {
   centerMap();
   mapFilters.reset();
   adForm.reset();
+  priceInput.min = 1000;
   priceInput.placeholder = 1000;
   getData((data) => {
     mapActivation(data);
