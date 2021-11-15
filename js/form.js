@@ -26,7 +26,7 @@ const rooms = document.querySelector('#room_number');
 const submitBtn = document.querySelector('.ad-form__submit');
 
 submitBtn.addEventListener('click', () => {
-  if (rooms.value < capacity.value || (Number(rooms.value) === 100)) {
+  if (rooms.value < capacity.value || (Number(rooms.value) === 100) || Number(capacity.value) === 0) {
     capacity.setCustomValidity('Число гостей не соответствует числу комнат!');
     if (Number(rooms.value) === 100 && Number(capacity.value) === 0) {
       capacity.setCustomValidity('');
@@ -38,6 +38,23 @@ submitBtn.addEventListener('click', () => {
     item.removeAttribute('style');
   });
 });
+
+const resetPage = () => {
+  adForm.reset();
+  mapFilters.reset();
+  mainPinMarker.setLatLng([
+    MainMarker.LAT,
+    MainMarker.LNG,
+  ]);
+  centerMap();
+  address.value = `${MainMarker.LAT}, ${MainMarker.LNG}`;
+  priceInput.min = prices.flat;
+  priceInput.placeholder = prices.flat;
+  getData((data) => {
+    mapActivation(data);
+    setFilterForm(data);
+  });
+};
 
 type.addEventListener('change', (evt) => {
   priceInput.min = prices[evt.target.value];
@@ -55,10 +72,10 @@ timeOut.addEventListener('change', (evt) => {
 const pageInactivation = () => {
   adForm.classList.add('ad-form--disabled');
   disableForm.forEach((item) => {
-    item.setAttribute('disabled', true);
+    item.disabled = true;
   });
   disableFilters.forEach((item) => {
-    item.setAttribute('disabled', true);
+    item.disabled = true;
   });
 };
 
@@ -78,22 +95,8 @@ formItems.forEach((item) => {
   });
 });
 
-resetButton.addEventListener('click', (evt) => {
-  evt.preventDefault();
-  mainPinMarker.setLatLng([
-    MainMarker.LAT,
-    MainMarker.LNG,
-  ]);
-  centerMap();
-  mapFilters.reset();
-  adForm.reset();
-  priceInput.min = 1000;
-  priceInput.placeholder = 1000;
-  getData((data) => {
-    mapActivation(data);
-    setFilterForm(data);
-  });
-  address.value = `${MainMarker.LAT}, ${MainMarker.LNG}`;
+resetButton.addEventListener('click', () => {
+  resetPage();
 });
 
-export {pageInactivation, activateForms};
+export {pageInactivation, activateForms, resetPage};

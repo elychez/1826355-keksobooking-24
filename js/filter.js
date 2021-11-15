@@ -35,8 +35,9 @@ const filterByGuests = (advert) => housingGuests.value === 'any' || advert.offer
 
 const filterByFeatures = (advert) => {
   const features = advert.offer.features || [];
-  const featuresList = Array.from(checkboxes).filter((checkbox) => checkbox.checked);
-  const selectedFeatures = Array.from(featuresList).map((item) => item.value);
+  const selectedFeatures = Array.from(checkboxes)
+    .filter((checkbox) => checkbox.checked)
+    .map((item) => item.value);
   return !selectedFeatures.some((element) => !features.includes(element));
 };
 
